@@ -1,19 +1,14 @@
 # lita-jenkins-client
 
-TODO: Add a description of the plugin.
+Lita jenkins handler that use the [jenkins\_api\_client gem](https://github.com/arangamani/jenkins_api_client)
+
+## NOTE: This project is under construction
 
 ## Installation
 
 Add lita-jenkins-client to your Lita instance's Gemfile:
 
 ``` ruby
-gem "lita-jenkins-client"
+gem "lita-jenkins-client", github: 'joshua5201/lita-jenkins-client'
 ```
 
-## Configuration
-
-TODO: Describe any configuration attributes the plugin exposes.
-
-## Usage
-
-TODO: Describe the plugin's features and how to use them.

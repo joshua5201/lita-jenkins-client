@@ -6,6 +6,7 @@ Lita.load_locales Dir[File.expand_path(
 )]
 
 require "lita/handlers/jenkins_client"
+require "lita/handlers/jenkins_client/base_action"
 
 Lita::Handlers::JenkinsClient.template_root File.expand_path(
   File.join("..", "..", "templates"),

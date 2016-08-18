@@ -1,0 +1,3 @@
+:server_url: "http://ci.example.com"
+:username: "yourusername"
+:password: "thepassword"

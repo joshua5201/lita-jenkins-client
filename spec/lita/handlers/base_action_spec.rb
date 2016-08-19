@@ -6,8 +6,9 @@ describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers
   it { is_expected.to route_command("jenkins version").to(:get_jenkins_version) }
   it { is_expected.to route_command("jenkins get_jenkins_version").to(:get_jenkins_version) }
 
-  it { is_expected.to route_command("jenkins get").to(:api_get_request) }
-  it { is_expected.to route_command("jenkins api_get_request").to(:api_get_request) }
+  it { is_expected.to route_command("jenkins exec_cli").to(:exec_cli) }
+  it { is_expected.to route_command("jenkins cli").to(:exec_cli) }
+  xit { is_expected.to route_command("jenkins exec_script").to(:exec_script) }
 
   let! (:client) { JenkinsApi::Client.new(jenkins_config_hash) }
 
@@ -25,13 +26,17 @@ describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers
       expect(replies.last).to eq(client.get_jenkins_version)
     end
   end
-
-  describe '#api_get_request' do
-    it 'gets data from api' do
-      send_command('jenkins get /');
-      expect(replies.last).to eq(client.api_get_request('/'))
+  
+  describe '#exec_cli' do
+    it 'executes the Jenkins CLI' do
+      send_command('jenkins exec_cli list-plugins git') 
+      expect(replies.last).to eq(client.exec_cli('list-plugins git'))
     end
   end
 
+  describe 'exec_script' do 
+    xit 'executes the provided groovy script on the Jenkins CI server' do
+    end
+  end
 end
 

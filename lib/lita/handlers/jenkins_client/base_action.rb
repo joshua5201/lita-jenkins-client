@@ -10,21 +10,22 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       "jenkins version" => "get jenkins version"
     })
 
-    route(route_matcher("(?:api_)?get(?:_request)?"), :api_get_request, :command => true, :help => {
-      "jenkins get" => "api get request url_prefix [tree = nil] [url_suffix = /api/json] [raw_response = false]"
+    route(route_matcher("(?:exec_)?cli"), :exec_cli, :command => true, :help => {
+      "jenkins exec_cli" => "executes the jenkins cli"
     })
 
     def get_jenkins_version(res)
       res.reply client.get_jenkins_version
     end
 
-    def api_get_request(res)
-      if res.args.length < 2 
-        res.reply "Error: url_prefix should be set"
-        res.reply "Example: jenkins [get | api_get_request] /me/my-views/view/All"
-      else
-        res.reply client.api_get_request(res.args[1]).to_s
+    def exec_cli(res)
+      if res.args.length < 2
+        res.reply 'Error: no command specified'
+        return
       end
+
+      res.reply client.exec_cli(res.args.slice(1...res.args.length).join(' '))
     end
+
   end
 end

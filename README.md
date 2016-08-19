@@ -17,6 +17,6 @@ gem "lita-jenkins-client", github: 'joshua5201/lita-jenkins-client'
 I made some demo commands to test the code structure and api.
 
 ```
-@lita jenkins api_get_request /me/my-views/view/All
+@lita jenkins exec_cli list-plugins git 
 @lita jenkins version
 ```

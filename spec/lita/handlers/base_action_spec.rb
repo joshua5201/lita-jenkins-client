@@ -11,18 +11,27 @@ describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers
 
   let! (:client) { JenkinsApi::Client.new(jenkins_config_hash) }
 
-  describe '#get_jenkins_version' do
-    before do
-      registry.config.handlers.jenkins_client.tap do |config|
-        config.username = jenkins_config_hash[:username]
-        config.password = jenkins_config_hash[:password]
-        config.server_url = jenkins_config_hash[:server_url]
-      end
+  before do
+    registry.config.handlers.jenkins_client.tap do |config|
+      config.username = jenkins_config_hash[:username]
+      config.password = jenkins_config_hash[:password]
+      config.server_url = jenkins_config_hash[:server_url]
     end
+  end
+
+  describe '#get_jenkins_version' do
     it 'replies jenkins version' do
       send_command('jenkins version');
       expect(replies.last).to eq(client.get_jenkins_version)
     end
   end
+
+  describe '#api_get_request' do
+    it 'gets data from api' do
+      send_command('jenkins get /');
+      expect(replies.last).to eq(client.api_get_request('/'))
+    end
+  end
+
 end
 

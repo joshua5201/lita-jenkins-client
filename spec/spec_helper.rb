@@ -11,11 +11,15 @@ def jenkins_config_hash
   @config ||= Psych.load_file('spec/config.yml')
 end
 def jenkins_config_mock
-  mock = Object.new
+  if @mock 
+    return @mock
+  end
+
+  @mock = Object.new
   jenkins_config_hash.each do |key, value|
-    mock.define_singleton_method(key) do 
+    @mock.define_singleton_method(key) do 
       value
     end
   end
-  return mock 
+  return @mock 
 end

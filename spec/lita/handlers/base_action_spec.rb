@@ -1,20 +1,27 @@
 require "spec_helper"
 require "jenkins_api_client"
 
-describe Lita::Handlers::JenkinsClient::BaseAction, lita_handler: true do
-  it { is_expected.to route("jenkins get_jenkins_version") }
+include Lita::Handlers
+describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers: JenkinsClient do
+  it { is_expected.to route_command("jenkins version").to(:get_jenkins_version) }
+  it { is_expected.to route_command("jenkins get_jenkins_version").to(:get_jenkins_version) }
 
-  let(:subject_class) { Lita::Handlers::JenkinsClient::BaseAction }
+  it { is_expected.to route_command("jenkins get").to(:api_get_request) }
+  it { is_expected.to route_command("jenkins api_get_request").to(:api_get_request) }
 
-  describe 'class methods' do
-    describe '#route_matcher' do
-      it 'adds a prefix to action name' do
-        expect(subject_class.send(:route_matcher, "foo")).to eq("jenkins foo")
+  let! (:client) { JenkinsApi::Client.new(jenkins_config_hash) }
+
+  describe '#get_jenkins_version' do
+    before do
+      registry.config.handlers.jenkins_client.tap do |config|
+        config.username = jenkins_config_hash[:username]
+        config.password = jenkins_config_hash[:password]
+        config.server_url = jenkins_config_hash[:server_url]
       end
-
-      it 'also accepts array as parameter' do
-        expect(subject_class.send(:route_matcher, ["foo", "bar"])).to eq("jenkins foo bar")
-      end
+    end
+    it 'replies jenkins version' do
+      send_command('jenkins version');
+      expect(replies.last).to eq(client.get_jenkins_version)
     end
   end
 end

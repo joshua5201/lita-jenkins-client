@@ -1,4 +1,6 @@
+require_relative 'jenkins_client/action'
 require_relative 'jenkins_client/base_action'
+
 module Lita
   module Handlers
     class JenkinsClient < Handler
@@ -52,13 +54,13 @@ module Lita
         CONFIGS.keys.select{|key| config.respond_to?(key)}.map{|key| [key, config.send(key)] }.to_h
       end
 
-      def set_client
-        @client = JenkinsApi::Client.new(jenkins_params)
-        @client
+      def client
+        @client ||= JenkinsApi::Client.new(jenkins_params)
       end
     end
 
     Lita.register_handler(JenkinsClient)
+    Lita.register_handler(JenkinsClient::Action)
     Lita.register_handler(JenkinsClient::BaseAction)
   end
 end

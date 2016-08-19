@@ -8,7 +8,7 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       end
 
       def route_matcher(actions)
-        Regexp.new((route_prefix + [actions].flatten).reduce("") { |res, str| res + str + " "}.strip, 'i')
+        Regexp.new((route_prefix + [actions].flatten).join(' ').strip, 'i')
       end
     end
 

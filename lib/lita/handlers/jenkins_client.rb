@@ -1,5 +1,6 @@
 require_relative 'jenkins_client/action'
 require_relative 'jenkins_client/base_action'
+require_relative 'jenkins_client/job_action'
 
 module Lita
   module Handlers
@@ -36,19 +37,6 @@ module Lita
         end
       end
 
-      class << self
-        def head_matcher(s, n = 1)
-          str = s.to_s 
-          if n >= str.length
-            str
-          else
-            "#{str.slice(0, n)}(?:#{str.slice(n, str.length)})?"
-          end
-        end
-
-        alias_method :hm, :head_matcher
-      end
-
       protected
       def jenkins_params 
         CONFIGS.keys.select{|key| config.respond_to?(key)}.map{|key| [key, config.send(key)] }.to_h
@@ -62,5 +50,6 @@ module Lita
     Lita.register_handler(JenkinsClient)
     Lita.register_handler(JenkinsClient::Action)
     Lita.register_handler(JenkinsClient::BaseAction)
+    Lita.register_handler(JenkinsClient::JobAction)
   end
 end

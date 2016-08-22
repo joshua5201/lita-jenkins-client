@@ -1,7 +1,8 @@
 require "spec_helper"
 require "jenkins_api_client"
 
-describe Lita::Handlers::JenkinsClient::Action do
+include Lita::Handlers
+describe JenkinsClient::Action, lita_handler: true, additional_lita_handlers: JenkinsClient do
   let(:subject_class) { Lita::Handlers::JenkinsClient::Action }
 
   describe 'class methods' do
@@ -15,4 +16,5 @@ describe Lita::Handlers::JenkinsClient::Action do
       end
     end
   end
+
 end

@@ -23,3 +23,26 @@ def jenkins_config_mock
   end
   return @mock 
 end
+
+def set_test_jobs
+  client = JenkinsApi::Client.new(jenkins_config_hash)
+  client.job.create_or_update('test_with_param', File.read('spec/fixtures/test_with_param.xml'))
+  client.job.create_or_update('test_without_param', File.read('spec/fixtures/test_without_param.xml'))
+end
+
+def delete_test_jobs
+  client = JenkinsApi::Client.new(jenkins_config_hash)
+  client.job.delete('test_with_param')
+  client.job.delete('test_without_param')
+end
+
+RSpec.configure do |config|
+  config.before(:all) do
+    set_test_jobs
+  end
+
+  config.after(:all) do
+    delete_test_jobs
+  end
+end
+

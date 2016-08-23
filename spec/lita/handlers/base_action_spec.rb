@@ -40,8 +40,8 @@ describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers
 
   describe '#get_config' do
     it 'gets jenkins config file according to url_prefix' do
-      send_command("jenkins get_config /job/test_with_param")
-      expect(replies.last).to eq(client.get_config("/job/test_with_param"))
+      send_command("jenkins get_config /job/test_with_params")
+      expect(replies.last).to eq(client.get_config("/job/test_with_params"))
     end
   end
 

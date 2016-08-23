@@ -1,6 +1,7 @@
 require_relative 'jenkins_client/action'
 require_relative 'jenkins_client/base_action'
 require_relative 'jenkins_client/job_action'
+require_relative 'jenkins_client/command'
 
 module Lita
   module Handlers

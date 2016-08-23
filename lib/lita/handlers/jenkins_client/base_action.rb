@@ -23,6 +23,10 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
     end
 
     def exec_cli(res)
+      if res.args.length < 2
+        res.reply 'Please provide at least one command'
+        return 
+      end
       res.reply api_exec(usage(:exec_cli)) { 
         client.exec_cli(res.args.slice(1...res.args.length).join(' '))
       }

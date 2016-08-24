@@ -28,13 +28,14 @@ module Lita
       }.freeze
 
       CONFIGS.each do |config_name, config_type|
-        config config_name, type: config_type 
         if config_type == Object
-          config config_name do 
+          config config_name, type: config_type do 
             validate do |value|
-              value.in? [true, false, nil]
+              "#{config_name} must be true or false or nil" unless [true, false, nil].include? value
             end
           end
+        else
+        config config_name, type: config_type 
         end
       end
 

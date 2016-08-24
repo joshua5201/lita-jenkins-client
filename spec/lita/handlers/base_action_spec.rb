@@ -11,8 +11,6 @@ describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers
   it { is_expected.to route_command("jenkins exec_cli").to(:exec_cli) }
   it { is_expected.to route_command("jenkins cli").to(:exec_cli) }
 
-  it { is_expected.to route_command("jenkins get_config").to(:get_config) }
-
   let! (:client) { JenkinsApi::Client.new(jenkins_config_hash) }
 
   before do
@@ -39,13 +37,6 @@ describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers
     it 'ends when no commands provides' do
       send_command('jenkins exec_cli ') 
       expect(replies.last).to eq('Please provide at least one command')
-    end
-  end
-
-  describe '#get_config' do
-    it 'gets jenkins config file according to url_prefix' do
-      send_command("jenkins get_config /job/test_with_params")
-      expect(replies.last).to eq(client.get_config("/job/test_with_params"))
     end
   end
 

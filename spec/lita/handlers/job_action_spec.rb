@@ -5,6 +5,7 @@ include Lita::Handlers
 describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers: JenkinsClient do
   it { is_expected.to route_command('jenkins job list_all').to(:list_all) }
   it { is_expected.to route_command('jenkins job build').to(:build) }
+  it { is_expected.to route_command('jenkins job exists?').to(:exists?) }
   it { is_expected.to route_command('jenkins job params').to(:get_build_params) }
   let! (:client) { JenkinsApi::Client.new(jenkins_config_hash) }
 
@@ -45,6 +46,11 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
       send_command('jenkins job build test_with_params bool:true choice:c foo:foobar')
       expect(replies.last).to eq("Job created. (http status 201)")
     end
+
+    it 'reply error message when ArgumentError' do
+      send_command('jenkins job build test_with_params bool:abc choice:c foo:foobar')
+      expect(replies.last).to eq('Error: bool should be true or false')
+    end
   end
 
   describe '#parse_build_params' do
@@ -76,4 +82,15 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
     end
   end
 
+  describe '#exists?' do
+    it 'shows if job exists' do
+      send_command('jenkins job exists? test_with_params')
+      expect(replies.last).to eq(client.job.exists?('test_with_params').inspect)
+    end
+
+    it 'ends when no input' do
+      send_command('jenkins job exists?')
+      expect(replies.last).to eq('please provide a job name')
+    end
+  end
 end

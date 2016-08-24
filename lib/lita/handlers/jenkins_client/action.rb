@@ -42,7 +42,7 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
         begin 
           yield
         rescue Exception => e
-          "Error: #{e.message} " + (usage ? "Usage: #{usage}" : '') 
+          "Error: #{e.message}" + (usage ? " Usage: #{usage}" : '') 
         end
       end
     end

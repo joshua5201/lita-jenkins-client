@@ -12,14 +12,19 @@ Add lita-jenkins-client to your Lita instance's Gemfile:
 gem "lita-jenkins-client", github: 'joshua5201/lita-jenkins-client'
 ```
 
-## Demo
+## Current Available Commands 
 
-I made some demo commands to test the code structure and api.
+see `@lita help jenkins` for more info
 
 ```
-@lita jenkins exec_cli list-plugins git 
-@lita jenkins job list_all
+@lita jenkins version 
+@lita jenkins running?
+@lita jenkins exec_cli [cmd]
 @lita jenkins version
+
+@lita jenkins job build [job name] [param_key:param_value]
+@lita jenkins job params [job name]
+
 ```
 
 ## Test

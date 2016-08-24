@@ -11,7 +11,6 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       super.merge ({
         get_jenkins_version: Command.new(name: 'version', matcher: '(?:get_jenkins_)?version', help: 'get jenkins version.'),
         exec_cli: Command.new(name: 'cli', matcher: '(?:exec_)?cli', help: 'executes the jenkins cli.', usage: 'cli [command]'),
-        get_config: Command.new(name: 'get_config', matcher: 'get_config', help: 'Obtains the configuration of a component from the Jenkins CI server.', usage: 'get_config [url_prefix (like /job/test_job)]'),
         get_root: Command.new(name: 'running?', matcher: 'running\?', help: 'Show if jenkins is running.'),
       })
     end
@@ -29,12 +28,6 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       end
       res.reply api_exec(usage(:exec_cli)) { 
         client.exec_cli(res.args.slice(1...res.args.length).join(' '))
-      }
-    end
-
-    def get_config(res)
-      res.reply api_exec(usage(:get_config)) { 
-        client.get_config(res.args[1])
       }
     end
 

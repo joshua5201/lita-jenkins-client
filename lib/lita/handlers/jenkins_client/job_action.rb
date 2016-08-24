@@ -15,8 +15,10 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       def commands
         super.merge({
           list_all: Command.new(name: 'list_all', matcher: 'list_all', help: 'list all jobs.'),
-          build: Command.new(name: 'build', matcher: 'build', help: 'build job, params type support: boolean, string, choice.', usage: 'build [job name] [param_key:param_value]'),
+          build: Command.new(name: 'build', matcher: 'build', help: "build job, #{BuildParam.print_supported_types}", usage: 'build [job name] [param_key:param_value]'),
           get_build_params: Command.new(name: 'params', matcher: '(?:get_build_)?params', help: 'obtain the build parameters of a job.', usage: 'params [job_name]'),
+          chain: Command.new(name: 'chain', matcher: 'chain', help: 'build jobs in chain', usage: 'chain [job names] [success/failure]'),
+          exists?: Command.new(name: 'exists?', matcher: 'exists\?', help: 'check if a job exists', usage: 'exists [job name]'),
         })
       end
     end
@@ -67,11 +69,8 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
           end
         }
       rescue ArgumentError => e
-        res.reply e.message
+        res.reply "Error: #{e.message}"
       end
-    end
-
-    def chain(res)
     end
 
     def copy(res)
@@ -80,13 +79,13 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
     def delete(res)
     end
 
-    def disable(res)
-    end
+    def exists?(res)
+      if res.args.length < 3
+        res.reply 'please provide a job name'
+        return
+      end
 
-    def enable(res)
-    end
-
-    def exist?(res)
+      res.reply api_exec { client.job.exists?(res.args[2]).inspect }
     end
 
     def get_build_params(res)

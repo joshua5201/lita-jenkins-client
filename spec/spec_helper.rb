@@ -1,5 +1,7 @@
 require 'simplecov'
-SimpleCov.start
+SimpleCov.start do
+  add_filter "/spec/"
+end
 
 require "lita-jenkins-client"
 require "lita/rspec"
@@ -18,12 +20,14 @@ def set_test_jobs
   client = JenkinsApi::Client.new(jenkins_config_hash)
   client.job.create_or_update('test_with_params', File.read('spec/fixtures/test_with_params.xml'))
   client.job.create_or_update('test_without_params', File.read('spec/fixtures/test_without_params.xml'))
+  client.job.create_or_update('test_without_params2', File.read('spec/fixtures/test_without_params.xml'))
 end
 
 def delete_test_jobs
   client = JenkinsApi::Client.new(jenkins_config_hash)
   client.job.delete('test_with_params')
   client.job.delete('test_without_params')
+  client.job.delete('test_without_params2')
 end
 
 RSpec.configure do |config|

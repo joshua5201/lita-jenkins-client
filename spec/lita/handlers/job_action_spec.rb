@@ -24,6 +24,7 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
     end
   end
 
+
   describe '#build' do
     it 'ends when no input' do
       send_command('jenkins job build')
@@ -41,14 +42,25 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
     end
 
     it 'builds job with parameters' do
-    end
-
-    it 'ignores parameters not in key:value pattern' do
+      send_command('jenkins job build test_with_params bool:true choice:c foo:foobar')
+      expect(replies.last).to eq("Job created. (http status 201)")
     end
   end
 
   describe '#parse_build_params' do
-    it 'parses key:value pairs to param hash according to the input hash' do
+    let(:build_params) { build_params = [{:type=>"boolean", :name=>"bool", :description=>"", :default=>"true"}, {:type=>"choice", :name=>"choice", :description=>"", :choices=>["a", "b", "c", "d"]}, {:type=>"string", :name=>"foo", :description=>"", :default=>"bar"}] }
+    let(:params) { {'bool' => true, 'choice' => 'c', 'foo' => 'foobar'} }
+
+    it 'parses valid args to valid build params' do
+      hash_args = {'bool' => 'true', 'choice' => 'c', 'foo' => 'foobar'}
+      expect(subject.send(:parse_build_params, hash_args, build_params)).to eq(params)
+    end
+  end
+
+  describe '#key_value_pair' do
+    it 'parses key:value string pairs to hash' do
+      input = ['foo:bar', 'test:true', 'ignored']
+      expect(subject.send(:key_value_pair, input)).to eq({'foo' => 'bar', 'test' => 'true'})
     end
   end
 

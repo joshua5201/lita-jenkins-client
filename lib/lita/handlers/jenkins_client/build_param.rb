@@ -1,9 +1,12 @@
 class Lita::Handlers::JenkinsClient < Lita::Handler  
   class BuildParam
     attr_reader :type, :name, :description, :default, :choices, :value
-    def initialize(type: , name: , description: , default: , choices: [])
+    def initialize(type: , name: , description: , default: '', choices: [])
       @type, @name, @description, @default, @choices = type, name, description, default, choices
-      self.value = default
+      if type == 'choice'
+        @default = choices[0] 
+      end
+      self.value = @default 
     end
 
     def value=(v)
@@ -14,7 +17,7 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       case @type
       when 'string'
         @value = v
-      when 'bool'
+      when 'boolean'
         if v == 'true'
           @value = true
         elsif v == 'false'
@@ -22,14 +25,14 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
         else
           raise ArgumentError, "#{@name} should be true or false"
         end
-      when 'choices'
-        if @choices.includes? (v)
+      when 'choice'
+        if @choices.include? (v)
           @value = v
         else
-          raise ArgumentError, "#{@name} should be one of #{@choice.inspect}"
+          raise ArgumentError, "#{@name} should be one of #{@choices.inspect}"
         end
       else
-        raise ArgumentError, "Currently available param types: 'string', 'bool', 'choices'"
+        raise ArgumentError, "Currently available param types: 'string', 'boolean', 'choice'"
       end
     end
 

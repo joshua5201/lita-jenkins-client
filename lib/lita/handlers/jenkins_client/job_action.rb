@@ -15,7 +15,7 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       def commands
         super.merge({
           list_all: Command.new(name: 'list_all', matcher: 'list_all', help: 'list all jobs.'),
-          build: Command.new(name: 'build', matcher: 'build', help: 'build job, params type support: bool, string, choice.', usage: 'build [job name] [param_key:param_value]'),
+          build: Command.new(name: 'build', matcher: 'build', help: 'build job, params type support: boolean, string, choice.', usage: 'build [job name] [param_key:param_value]'),
           get_build_params: Command.new(name: 'params', matcher: '(?:get_build_)?params', help: 'obtain the build parameters of a job.', usage: 'params [job_name]'),
         })
       end
@@ -50,14 +50,25 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
         res.reply "job #{job_name} not exists" 
         return 
       end
-
-      if res.args.length == 3
+      hash_args = key_value_pair(res.args.slice(3...res.args.length))
+      if hash_args.empty? 
         res.reply api_exec { client.job.build(job_name) }
         return 
       end
 
-      params = parse_build_params(res.arg.slice(3...res.arg.length), client.job.get_build_params(job_name))
-      res.reply api_exec { client.job.build(job_name, params) }
+      begin
+        params = parse_build_params(hash_args, client.job.get_build_params(job_name))
+        res.reply api_exec { 
+          http_status = client.job.build(job_name, params)
+          if http_status == '201'
+            'Job created. (http status 201)'
+          else
+            "Something went wrong. (http status: #{http_status})"
+          end
+        }
+      rescue ArgumentError => e
+        res.reply e.message
+      end
     end
 
     def chain(res)
@@ -100,18 +111,24 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
     end
 
     private
-    def parse_build_params(args, build_params)
-      hash_args = args.map { |arg|
-        if pair = /([\/\\,\.\w-]+):([\/\\,\.\w-]+)/.match(arg).captures
+    def parse_build_params(hash_args, build_params)
+      params = build_params.map do |param|
+        bp = BuildParam.new(param)
+        bp.value = hash_args[bp.name]
+        bp
+      end
+
+      return params.reduce({}) {|res, p| res.merge(p.to_h) }
+    end
+
+    def key_value_pair(args)
+      args.map { |arg|
+        if pair = /([\/\\,\.\w-]+):([\/\\,\.\w-]+)/.match(arg)&.captures
           [pair[0], pair[1]]
         else
           nil
         end
       }.compact.to_h
-      params = build_params.map do |param|
-        bp = BuiltParam.new(param)
-        bp.value = hash_args[bp.name]
-      end
     end
   end
 end

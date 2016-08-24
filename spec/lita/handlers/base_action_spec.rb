@@ -36,6 +36,10 @@ describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers
       send_command('jenkins exec_cli list-plugins git') 
       expect(replies.last).to eq(client.exec_cli('list-plugins git'))
     end
+    it 'ends when no commands provides' do
+      send_command('jenkins exec_cli ') 
+      expect(replies.last).to eq('Please provide at least one command')
+    end
   end
 
   describe '#get_config' do

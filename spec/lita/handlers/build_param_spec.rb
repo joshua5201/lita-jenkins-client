@@ -84,5 +84,8 @@ describe JenkinsClient::BuildParam do
   end
 
   describe '#to_h' do
+    it 'converts BuildParam to Hash' do
+      expect(boolean_param.to_h).to eq({'test' => true})
+    end
   end
 end

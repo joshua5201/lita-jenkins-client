@@ -26,7 +26,7 @@ describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers
   end
 
   describe '#cli' do
-    it 'executes the Jenkins CLI' do
+    it 'executes the Jenkins CLI', :cli_test => true do
       send_command('jenkins cli list-plugins git') 
       expect(replies.last).to eq(client.exec_cli('list-plugins git'))
     end

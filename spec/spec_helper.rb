@@ -31,6 +31,10 @@ def delete_test_jobs
 end
 
 RSpec.configure do |config|
+  unless jenkins_config_hash[:test_cli]
+    config.filter_run_excluding :cli_test => true
+  end
+
   config.before(:suite) do
     set_test_jobs
   end

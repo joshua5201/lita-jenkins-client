@@ -25,6 +25,7 @@ see `@lita help jenkins` for more info
 
 @lita jenkins job build [job name] [param_key:param_value]
 @lita jenkins job params [job name]
+@lita jenkins job status [job name]
 @lita jenkins job all
 @lita jenkins job list [filter]
 @lita jenkins job list_by_status [success/failure]

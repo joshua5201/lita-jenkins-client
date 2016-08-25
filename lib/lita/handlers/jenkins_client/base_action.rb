@@ -11,7 +11,7 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       super.merge ({
         version: Command.new(name: 'version', matcher: 'version', help: 'get jenkins version.'),
         cli: Command.new(name: 'cli', matcher: 'cli', help: 'executes the jenkins cli.', usage: 'cli [command]'),
-        running?: Command.new(name: 'running?', matcher: 'running\?', help: 'Show if jenkins is running.'),
+        running?: Command.new(name: 'running?', matcher: 'running\\?', help: 'Show if jenkins is running.'),
       })
     end
 

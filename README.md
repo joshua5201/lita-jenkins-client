@@ -2,7 +2,8 @@
 
 Lita jenkins handler that use the [jenkins\_api\_client gem](https://github.com/arangamani/jenkins_api_client)
 
-## NOTE: This project is under construction
+## About
+Integrate Lita and jenkins api. I've implement some commands which is usable now.
 
 ## Installation
 
@@ -24,7 +25,9 @@ see `@lita help jenkins` for more info
 
 @lita jenkins job build [job name] [param_key:param_value]
 @lita jenkins job params [job name]
-
+@lita jenkins job all
+@lita jenkins job list [filter]
+@lita jenkins job list_by_status [success/failure]
 ```
 
 ## Test

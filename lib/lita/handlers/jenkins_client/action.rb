@@ -1,4 +1,5 @@
 require_relative 'command'
+require 'byebug'
 class Lita::Handlers::JenkinsClient < Lita::Handler  
   class Action < Lita::Handlers::JenkinsClient
     namespace "jenkins_client"

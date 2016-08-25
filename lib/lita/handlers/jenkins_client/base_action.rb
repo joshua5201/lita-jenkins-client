@@ -9,29 +9,29 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
 
     def self.commands
       super.merge ({
-        get_jenkins_version: Command.new(name: 'version', matcher: '(?:get_jenkins_)?version', help: 'get jenkins version.'),
-        exec_cli: Command.new(name: 'cli', matcher: '(?:exec_)?cli', help: 'executes the jenkins cli.', usage: 'cli [command]'),
-        get_root: Command.new(name: 'running?', matcher: 'running\?', help: 'Show if jenkins is running.'),
+        version: Command.new(name: 'version', matcher: 'version', help: 'get jenkins version.'),
+        cli: Command.new(name: 'cli', matcher: 'cli', help: 'executes the jenkins cli.', usage: 'cli [command]'),
+        running?: Command.new(name: 'running?', matcher: 'running\?', help: 'Show if jenkins is running.'),
       })
     end
 
-    def get_jenkins_version(res)
+    def version(res)
       res.reply api_exec { 
         client.get_jenkins_version
       }
     end
 
-    def exec_cli(res)
+    def cli(res)
       if res.args.length < 2
         res.reply 'Please provide at least one command'
         return 
       end
-      res.reply api_exec(usage(:exec_cli)) { 
+      res.reply api_exec(usage(:cli)) { 
         client.exec_cli(res.args.slice(1...res.args.length).join(' '))
       }
     end
 
-    def get_root(res)
+    def running?(res)
       res.reply api_exec { 
         client.get_root.inspect
         "Running"

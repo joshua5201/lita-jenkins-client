@@ -3,10 +3,11 @@ require "jenkins_api_client"
 
 include Lita::Handlers
 describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers: JenkinsClient do
-  it { is_expected.to route_command('jenkins job list_all').to(:list_all) }
+  it { is_expected.to route_command('jenkins job all').to(:all) }
+  it { is_expected.to route_command('jenkins job list').to(:list) }
   it { is_expected.to route_command('jenkins job build').to(:build) }
   it { is_expected.to route_command('jenkins job exists?').to(:exists?) }
-  it { is_expected.to route_command('jenkins job params').to(:get_build_params) }
+  it { is_expected.to route_command('jenkins job params').to(:params) }
   let! (:client) { JenkinsApi::Client.new(jenkins_config_hash) }
 
   before do
@@ -18,9 +19,9 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
     end
   end
 
-  describe '#list_all' do
+  describe '#all' do
     it 'returns list of jobs' do
-      send_command('jenkins job list_all')
+      send_command('jenkins job all')
       expect(replies.last).to eq(client.job.list_all.inspect)
     end
   end
@@ -39,7 +40,7 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
 
     it 'builds job without parameters' do
       send_command('jenkins job build test_without_params')
-      expect(replies.last).to eq(client.job.build('test_without_params'))
+      expect(replies.last).to eq("Job created. (http status 201)")
     end
 
     it 'builds job with parameters' do
@@ -70,7 +71,7 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
     end
   end
 
-  describe '#get_build_params' do
+  describe '#params' do
     it 'obtains job info' do
       send_command('jenkins job params test_with_params')
       expect(replies.last).to eq(client.job.get_build_params('test_with_params').inspect)

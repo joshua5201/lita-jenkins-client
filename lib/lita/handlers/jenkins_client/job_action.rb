@@ -14,31 +14,39 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
 
       def commands
         super.merge({
-          list_all: Command.new(name: 'list_all', matcher: 'list_all', help: 'list all jobs.'),
+          all: Command.new(name: 'all', matcher: 'all', help: 'list all jobs.'),
+          list: Command.new(name: 'list', matcher: 'list', help: 'list jobs matching pattern.', usage: 'list [filter]'),
+          list_by_status: Command.new(name: 'list_by_status', matcher: 'list_by_status', help: 'list jobs with certain status.', usage: 'list_by_status [success/failure]'),
           build: Command.new(name: 'build', matcher: 'build', help: "build job, #{BuildParam.print_supported_types}", usage: 'build [job name] [param_key:param_value]'),
-          get_build_params: Command.new(name: 'params', matcher: '(?:get_build_)?params', help: 'obtain the build parameters of a job.', usage: 'params [job_name]'),
+          params: Command.new(name: 'params', matcher: 'params', help: 'obtain the build parameters of a job.', usage: 'params [job_name]'),
           chain: Command.new(name: 'chain', matcher: 'chain', help: 'build jobs in chain', usage: 'chain [job names] [success/failure]'),
           exists?: Command.new(name: 'exists?', matcher: 'exists\?', help: 'check if a job exists', usage: 'exists [job name]'),
         })
       end
     end
 
-    def list_all(res)
+    def all(res)
       res.reply api_exec {
         client.job.list_all.inspect
       }
     end
 
     def list(res)
-    end
+      if res.args.length < 3
+        res.reply 'please provide a search condition'
+        return
+      end
 
-    def list_with_details(res)
-    end
-
-    def list_all_with_details(res)
+      res.reply api_exec { client.list(res.args[2]) }
     end
 
     def list_by_status(res)
+      if res.args.length < 3
+        res.reply 'please provide a status ( SUCCESS, FAILURE )'
+        return
+      end
+      
+      res.reply api_exec { client.list_by_status(res.args[2]) }
     end
 
     def build(res)
@@ -54,29 +62,29 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       end
       hash_args = key_value_pair(res.args.slice(3...res.args.length))
       if hash_args.empty? 
-        res.reply api_exec { client.job.build(job_name) }
+        res.reply api_exec { 
+          print_build_status(client.job.build(job_name))
+        }
         return 
       end
 
       begin
         params = parse_build_params(hash_args, client.job.get_build_params(job_name))
         res.reply api_exec { 
-          http_status = client.job.build(job_name, params)
-          if http_status == '201'
-            'Job created. (http status 201)'
-          else
-            "Something went wrong. (http status: #{http_status})"
-          end
+          print_build_status(client.job.build(job_name, params))
         }
       rescue ArgumentError => e
         res.reply "Error: #{e.message}"
       end
     end
 
-    def copy(res)
-    end
-
     def delete(res)
+      if res.args.length < 3 
+        res.reply 'please provide a job name'
+        return
+      end
+
+      res.reply api_exec { client.job.delete(res.args[2]).inspect }
     end
 
     def exists?(res)
@@ -88,19 +96,13 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       res.reply api_exec { client.job.exists?(res.args[2]).inspect }
     end
 
-    def get_build_params(res)
+    def params(res)
       if res.args.length < 3 
         res.reply 'please provide a job name'
         return
       end
 
       res.reply api_exec { client.job.get_build_params(res.args[2]).inspect }
-    end
-
-    def get_console_output(res)
-    end
-
-    def get_current_build_number(res)
     end
 
     def get_current_build_status(res)
@@ -128,6 +130,14 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
           nil
         end
       }.compact.to_h
+    end
+
+    def print_build_status(status)
+      if status == '201'
+        'Job created. (http status 201)'
+      else
+        "Something went wrong. (http status: #{status})"
+      end
     end
   end
 end

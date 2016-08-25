@@ -3,13 +3,9 @@ require "jenkins_api_client"
 
 include Lita::Handlers
 describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers: JenkinsClient do
-  it { is_expected.to route_command("jenkins version").to(:get_jenkins_version) }
-  it { is_expected.to route_command("jenkins get_jenkins_version").to(:get_jenkins_version) }
-
-  it { is_expected.to route_command("jenkins running?").to(:get_root) }
-
-  it { is_expected.to route_command("jenkins exec_cli").to(:exec_cli) }
-  it { is_expected.to route_command("jenkins cli").to(:exec_cli) }
+  it { is_expected.to route_command("jenkins version").to(:version) }
+  it { is_expected.to route_command("jenkins running?").to(:running?) }
+  it { is_expected.to route_command("jenkins cli").to(:cli) }
 
   let! (:client) { JenkinsApi::Client.new(jenkins_config_hash) }
 
@@ -22,20 +18,20 @@ describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers
     end
   end
 
-  describe '#get_jenkins_version' do
+  describe '#version' do
     it 'replies jenkins version' do
       send_command('jenkins version');
       expect(replies.last).to eq(client.get_jenkins_version)
     end
   end
 
-  describe '#exec_cli' do
+  describe '#cli' do
     it 'executes the Jenkins CLI' do
-      send_command('jenkins exec_cli list-plugins git') 
+      send_command('jenkins cli list-plugins git') 
       expect(replies.last).to eq(client.exec_cli('list-plugins git'))
     end
     it 'ends when no commands provides' do
-      send_command('jenkins exec_cli ') 
+      send_command('jenkins cli ') 
       expect(replies.last).to eq('Please provide at least one command')
     end
   end

@@ -17,6 +17,7 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
           all: Command.new(name: 'all', matcher: 'all', help: 'list all jobs.'),
           list: Command.new(name: 'list', matcher: 'list', help: 'list jobs matching pattern.', usage: 'list [filter]'),
           list_by_status: Command.new(name: 'list_by_status', matcher: 'list_by_status', help: 'list jobs with certain status.', usage: 'list_by_status [success/failure]'),
+          status: Command.new(name: 'status', matcher: 'status', help: 'print job status.', usage: 'status [job name]'),
           build: Command.new(name: 'build', matcher: 'build', help: "build job, #{BuildParam.print_supported_types}", usage: 'build [job name] [param_key:param_value]'),
           params: Command.new(name: 'params', matcher: 'params', help: 'obtain the build parameters of a job.', usage: 'params [job_name]'),
           exists?: Command.new(name: 'exists?', matcher: 'exists\?', help: 'check if a job exists', usage: 'exists [job name]'),
@@ -86,6 +87,15 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       res.reply api_exec { client.job.delete(res.args[2]).inspect }
     end
 
+    def status(res)
+      if res.args.length < 3 
+        res.reply 'please provide a job name'
+        return
+      end
+
+      res.reply api_exec { client.job.get_current_build_status(res.args[2]).inspect }
+    end
+
     def exists?(res)
       if res.args.length < 3
         res.reply 'please provide a job name'
@@ -102,9 +112,6 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       end
 
       res.reply api_exec { client.job.get_build_params(res.args[2]).inspect }
-    end
-
-    def get_current_build_status(res)
     end
 
     def stop_build(res)

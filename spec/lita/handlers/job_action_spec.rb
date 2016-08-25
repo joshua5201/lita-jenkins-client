@@ -5,6 +5,7 @@ include Lita::Handlers
 describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers: JenkinsClient do
   it { is_expected.to route('jenkins job all').to(:all) }
   it { is_expected.to route('jenkins job list').to(:list) }
+  it { is_expected.to route('jenkins job status').to(:status) }
   it { is_expected.to route('jenkins job build').to(:build) }
   it { is_expected.to route('jenkins job exists?').to(:exists?) }
   it { is_expected.to route('jenkins job params').to(:params) }
@@ -87,6 +88,18 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
     it 'shows if job exists' do
       send_message('jenkins job exists? test_with_params')
       expect(replies.last).to eq(client.job.exists?('test_with_params').inspect)
+    end
+
+    it 'ends when no input' do
+      send_message('jenkins job exists?')
+      expect(replies.last).to eq('please provide a job name')
+    end
+  end
+
+  describe '#status' do
+    it 'shows job status' do
+      send_message('jenkins job status test_with_params')
+      expect(replies.last).to eq(client.job.get_current_build_status('test_with_params').inspect)
     end
 
     it 'ends when no input' do

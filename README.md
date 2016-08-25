@@ -19,7 +19,7 @@ see `@lita help jenkins` for more info
 ```
 @lita jenkins version 
 @lita jenkins running?
-@lita jenkins exec_cli [cmd]
+@lita jenkins cli [cmd]
 @lita jenkins version
 
 @lita jenkins job build [job name] [param_key:param_value]

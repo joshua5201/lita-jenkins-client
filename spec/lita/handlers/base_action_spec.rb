@@ -3,9 +3,9 @@ require "jenkins_api_client"
 
 include Lita::Handlers
 describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers: JenkinsClient do
-  it { is_expected.to route_command("jenkins version").to(:version) }
-  it { is_expected.to route_command("jenkins running?").to(:running?) }
-  it { is_expected.to route_command("jenkins cli").to(:cli) }
+  it { is_expected.to route("jenkins version").to(:version) }
+  it { is_expected.to route("jenkins running?").to(:running?) }
+  it { is_expected.to route("jenkins cli").to(:cli) }
 
   let! (:client) { JenkinsApi::Client.new(jenkins_config_hash) }
 
@@ -20,25 +20,25 @@ describe JenkinsClient::BaseAction, lita_handler: true, additional_lita_handlers
 
   describe '#version' do
     it 'replies jenkins version' do
-      send_command('jenkins version');
+      send_message('jenkins version');
       expect(replies.last).to eq(client.get_jenkins_version)
     end
   end
 
   describe '#cli' do
     it 'executes the Jenkins CLI', :cli_test => true do
-      send_command('jenkins cli list-plugins git') 
+      send_message('jenkins cli list-plugins git') 
       expect(replies.last).to eq(client.exec_cli('list-plugins git'))
     end
     it 'ends when no commands provides' do
-      send_command('jenkins cli ') 
+      send_message('jenkins cli ') 
       expect(replies.last).to eq('Please provide at least one command')
     end
   end
 
   describe '#running?' do
     it 'returns Running when jenkins running' do
-      send_command('jenkins running?') 
+      send_message('jenkins running?') 
       expect(replies.last).to eq("Running")
     end
   end

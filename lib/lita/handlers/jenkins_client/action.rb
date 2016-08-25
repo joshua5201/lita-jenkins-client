@@ -28,7 +28,7 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
           return
         end
         if cmd = commands[name]
-          route(route_matcher(cmd.matcher), name, :command => true, :help => {
+          route(route_matcher(cmd.matcher), name, :help => {
             "#{name_prefix} #{cmd.name}" => "#{cmd.help} Usage: #{name_prefix} #{cmd.usage}"
           })
         end

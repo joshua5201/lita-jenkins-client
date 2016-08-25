@@ -3,11 +3,11 @@ require "jenkins_api_client"
 
 include Lita::Handlers
 describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers: JenkinsClient do
-  it { is_expected.to route_command('jenkins job all').to(:all) }
-  it { is_expected.to route_command('jenkins job list').to(:list) }
-  it { is_expected.to route_command('jenkins job build').to(:build) }
-  it { is_expected.to route_command('jenkins job exists?').to(:exists?) }
-  it { is_expected.to route_command('jenkins job params').to(:params) }
+  it { is_expected.to route('jenkins job all').to(:all) }
+  it { is_expected.to route('jenkins job list').to(:list) }
+  it { is_expected.to route('jenkins job build').to(:build) }
+  it { is_expected.to route('jenkins job exists?').to(:exists?) }
+  it { is_expected.to route('jenkins job params').to(:params) }
   let! (:client) { JenkinsApi::Client.new(jenkins_config_hash) }
 
   before do
@@ -21,7 +21,7 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
 
   describe '#all' do
     it 'returns list of jobs' do
-      send_command('jenkins job all')
+      send_message('jenkins job all')
       expect(replies.last).to eq(client.job.list_all.inspect)
     end
   end
@@ -29,27 +29,27 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
 
   describe '#build' do
     it 'ends when no input' do
-      send_command('jenkins job build')
+      send_message('jenkins job build')
       expect(replies.last).to eq("please provide a job name")
     end
 
     it 'ends when job not exists' do
-      send_command('jenkins job build not_exist')
+      send_message('jenkins job build not_exist')
       expect(replies.last).to eq("job not_exist not exists")
     end
 
     it 'builds job without parameters' do
-      send_command('jenkins job build test_without_params')
+      send_message('jenkins job build test_without_params')
       expect(replies.last).to eq("Job created. (http status 201)")
     end
 
     it 'builds job with parameters' do
-      send_command('jenkins job build test_with_params bool:true choice:c foo:foobar')
+      send_message('jenkins job build test_with_params bool:true choice:c foo:foobar')
       expect(replies.last).to eq("Job created. (http status 201)")
     end
 
     it 'reply error message when ArgumentError' do
-      send_command('jenkins job build test_with_params bool:abc choice:c foo:foobar')
+      send_message('jenkins job build test_with_params bool:abc choice:c foo:foobar')
       expect(replies.last).to eq('Error: bool should be true or false')
     end
   end
@@ -73,24 +73,24 @@ describe JenkinsClient::JobAction, lita_handler: true, additional_lita_handlers:
 
   describe '#params' do
     it 'obtains job info' do
-      send_command('jenkins job params test_with_params')
+      send_message('jenkins job params test_with_params')
       expect(replies.last).to eq(client.job.get_build_params('test_with_params').inspect)
     end
 
     it 'ends when no input' do
-      send_command('jenkins job params')
+      send_message('jenkins job params')
       expect(replies.last).to eq('please provide a job name')
     end
   end
 
   describe '#exists?' do
     it 'shows if job exists' do
-      send_command('jenkins job exists? test_with_params')
+      send_message('jenkins job exists? test_with_params')
       expect(replies.last).to eq(client.job.exists?('test_with_params').inspect)
     end
 
     it 'ends when no input' do
-      send_command('jenkins job exists?')
+      send_message('jenkins job exists?')
       expect(replies.last).to eq('please provide a job name')
     end
   end

@@ -114,9 +114,6 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       res.reply api_exec { client.job.get_build_params(res.args[2]).inspect }
     end
 
-    def stop_build(res)
-    end
-
     private
     def parse_build_params(hash_args, build_params)
       params = build_params.map do |param|

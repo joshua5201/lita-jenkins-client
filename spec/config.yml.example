@@ -4,4 +4,4 @@
 :log_level: 2
 
 # pass cli tests if you use https and got 403 error 
-:test_cli: true
+:cli_test: true

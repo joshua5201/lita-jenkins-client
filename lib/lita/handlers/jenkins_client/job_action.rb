@@ -19,7 +19,6 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
           list_by_status: Command.new(name: 'list_by_status', matcher: 'list_by_status', help: 'list jobs with certain status.', usage: 'list_by_status [success/failure]'),
           build: Command.new(name: 'build', matcher: 'build', help: "build job, #{BuildParam.print_supported_types}", usage: 'build [job name] [param_key:param_value]'),
           params: Command.new(name: 'params', matcher: 'params', help: 'obtain the build parameters of a job.', usage: 'params [job_name]'),
-          chain: Command.new(name: 'chain', matcher: 'chain', help: 'build jobs in chain', usage: 'chain [job names] [success/failure]'),
           exists?: Command.new(name: 'exists?', matcher: 'exists\?', help: 'check if a job exists', usage: 'exists [job name]'),
         })
       end

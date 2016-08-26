@@ -8,11 +8,11 @@ describe JenkinsClient::Action, lita_handler: true, additional_lita_handlers: Je
   describe 'class methods' do
     describe '#route_matcher' do
       it 'adds a prefix to action name' do
-        expect(subject_class.send(:route_matcher, "foo")).to eq(Regexp.new('^jenkins foo', 'i'))
+        expect(subject_class.send(:route_matcher, "foo")).to eq(Regexp.new('^jenkins foo\b', 'i'))
       end
 
       it 'also accepts array as parameter' do
-        expect(subject_class.send(:route_matcher, ["foo", "bar"])).to eq(Regexp.new('^jenkins foo bar', 'i'))
+        expect(subject_class.send(:route_matcher, ["foo", "bar"])).to eq(Regexp.new('^jenkins foo bar\b', 'i'))
       end
     end
   end

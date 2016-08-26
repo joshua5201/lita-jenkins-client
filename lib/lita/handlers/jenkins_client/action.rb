@@ -12,7 +12,7 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
       end
       
       def route_matcher(actions)
-        Regexp.new('^'+(route_prefix + [actions].flatten).join(' ').strip, 'i')
+        Regexp.new('^'+(route_prefix + [actions].flatten).join(' ').strip + '\b', 'i')
       end
 
       def name_prefix

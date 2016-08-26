@@ -20,7 +20,7 @@ class Lita::Handlers::JenkinsClient < Lita::Handler
           status: Command.new(name: 'status', matcher: 'status', help: 'print job status.', usage: 'status [job name]'),
           build: Command.new(name: 'build', matcher: 'build', help: "build job, #{BuildParam.print_supported_types}", usage: 'build [job name] [param_key:param_value]'),
           params: Command.new(name: 'params', matcher: 'params', help: 'obtain the build parameters of a job.', usage: 'params [job_name]'),
-          exists?: Command.new(name: 'exists?', matcher: 'exists\\?', help: 'check if a job exists', usage: 'exists [job name]'),
+          exists?: Command.new(name: 'exists?', matcher: 'exists', help: 'check if a job exists', usage: 'exists [job name]'),
         })
       end
     end

@@ -14,7 +14,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "lita", ">= 4.7"
-  spec.add_dependency "byebug"
   spec.add_runtime_dependency "jenkins_api_client", '~> 1.4'
 
   spec.add_development_dependency "bundler", "~> 1.3"

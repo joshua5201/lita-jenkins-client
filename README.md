@@ -2,6 +2,8 @@
 
 Lita jenkins handler that use the [jenkins\_api\_client gem](https://github.com/arangamani/jenkins_api_client)
 
+RubyGems.org project website: [https://rubygems.org/gems/lita-jenkins-client](https://rubygems.org/gems/lita-jenkins-client)
+
 ## About
 Integrate Lita and jenkins api. I've implement some commands which is usable now.
 
@@ -10,7 +12,8 @@ Integrate Lita and jenkins api. I've implement some commands which is usable now
 Add lita-jenkins-client to your Lita instance's Gemfile:
 
 ``` ruby
-gem "lita-jenkins-client", github: 'joshua5201/lita-jenkins-client'
+gem "lita-jenkins-client" # Fetch from rubygems.org
+gem "lita-jenkins-client", github: 'joshua5201/lita-jenkins-client' # Fetch from github
 ```
 
 ## Current Available Commands 

@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "lita-jenkins-client"
-  spec.version       = "0.1.1"
+  spec.version       = "0.1.2"
   spec.authors       = ["Tsung-en Hsiao"]
   spec.email         = ["joshua841025@gmail.com"]
   spec.summary = 'Lita jenkins handler that use the jenkins_api_client gem'

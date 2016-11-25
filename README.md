@@ -16,7 +16,20 @@ gem "lita-jenkins-client" # Fetch from rubygems.org
 gem "lita-jenkins-client", github: 'joshua5201/lita-jenkins-client' # Fetch from github
 ```
 
-## Current Available Commands 
+## Configuration
+To configure lita to use your build server add the following lines to your ``lita_config.rb``:
+
+```ruby
+  config.handlers.jenkins_client.server_url = "https://<your-jenkins-hostname>"
+  config.handlers.jenkins_client.username   = "<jenkins-username>"
+  config.handlers.jenkins_client.password   = "<jenkins-password>"
+```
+
+A full list of all config keys can be found
+[here](https://github.com/joshua5201/lita-jenkins-client/blob/master/lib/lita/handlers/jenkins_client.rb#L11-L28)
+
+
+## Current Available Commands
 
 see `@lita help jenkins` for more info
 
